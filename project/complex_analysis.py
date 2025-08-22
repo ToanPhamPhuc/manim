@@ -71,12 +71,12 @@ class CauchyIntegralTheoremScene(BasedComplexScene):
         R = 2.0
         pts = [R+R*1j, -R+R*1j, -R-R*1j, R-R*1j, R+R*1j]
         poly = VMobject().set_stroke(BLUE, 3)
-        poly.set_points_as_corners([plane.n2p([p.real, p.imag]) for p in pts])
+        poly.set_points_as_corners([plane.n2p(p) for p in pts])
         self.play(Create(poly))
 
 
         # Animate a dot going around
-        mover = Dot(color=BLUE).move_to(plane.n2p([pts[0].real, pts[0].imag]))
+        mover = Dot(color=BLUE).move_to(plane.n2p(pts[0]))
         self.add(mover)
         self.play(MoveAlongPath(mover, poly), run_time=3, rate_func=linear)
 
