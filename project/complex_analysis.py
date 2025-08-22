@@ -54,66 +54,41 @@ class BasedComplexScene(Scene):
 # 1) Cauchy Integral Theorem (CIT)
 # ==========================
 
-class CauchyIntegralTheoremScene(BasedComplexScene):
+class CauchyIntegralTheoremScene(Scene):
     def construct(self):
-        plane = self.setup_plane()
-        title = TitleBanner(r"Cauchy Integral Theorem", r"If $f$ analytic on and inside $\gamma$ then $\oint_\gamma f(z)\,dz=0$")
-        title.to_edge(UP)
-        self.play(FadeIn(title))
-
-
-        # Example function analytic everywhere: f(z) = z^2
-        def f(z):
-            return z**2
-
-
-        # Square contour (piecewise smooth) around origin
-        R = 2.0
-        pts = [R+R*1j, -R+R*1j, -R-R*1j, R-R*1j, R+R*1j]
-        poly = VMobject().set_stroke(BLUE, 3)
-        poly.set_points_as_corners([plane.n2p(p) for p in pts])
-        self.play(Create(poly))
-
-
-        # Animate a dot going around
-        mover = Dot(color=BLUE).move_to(plane.n2p(pts[0]))
-        self.add(mover)
-        self.play(MoveAlongPath(mover, poly), run_time=3, rate_func=linear)
-
-
-        # Numerical integral ~ 0
-        gamma_segments = [
-            lambda t: R + R*1j + t*(-2*R), # top: (R+iR) -> (-R+iR)
-            lambda t: -R + R*1j + t*(-2j*R), # left: (-R+iR) -> (-R-iR)
-            lambda t: -R - R*1j + t*(2*R), # bottom: (-R-iR) -> (R-iR)
-            lambda t: R - R*1j + t*(2j*R), # right: (R-iR) -> (R+iR)
-        ]
-        def gamma(u):
-            # concatenate segments
-            u = np.clip(u, 0, 1)
-            k = int(u * 4)
-            if k == 4: k = 3
-            t = u*4 - k
-            return gamma_segments[k](t)
-
-        approx = trapezoid_contour_integral(f, gamma, N=1600)
-        tex = MathTex(r"\oint_\gamma z^2\,dz \approx ", f"{approx.real:.2e}+{approx.imag:.2e}i", r"\approx 0")
-        tex.to_edge(DOWN)
-        self.play(Write(tex))
-        self.wait(0.5)
-
-
-        # Catch 1: Not simply-connected / a singularity inside -> CIT doesn't apply
-        catch = Tex(r"Catch: CIT needs analyticity on \\ and *inside* $\gamma$. A pole inside breaks it.")
-        catch.next_to(tex, UP)
-        self.play(FadeIn(catch))
-
-
-        # Replace f with 1/(z - 0.5) (simple pole at 0.5)
-        def g(z):
-            return 1.0 / (z - 0.5)
-        approx_g = trapezoid_contour_integral(g, gamma, N=2000)
-        tex2 = MathTex(r"\oint_\gamma \frac{dz}{z-0.5} = 2\pi i \neq 0\ (analytically)", color=YELLOW)
-        tex2.next_to(catch, UP)
-        self.play(Write(tex2))
+        # Title
+        title = Tex("Cauchy's Integral Theorem", font_size=64)
+        self.play(Write(title))
         self.wait(1)
+        self.play(title.animate.to_edge(UP))
+
+        # Complex plane
+        plane = ComplexPlane(x_range=[-3, 3], y_range=[-3, 3], background_line_style={"stroke_opacity": 0.4})
+        labels = plane.get_axis_labels(x_label="Re", y_label="Im")
+        self.play(Create(plane), Write(labels))
+
+        # Define path (circle)
+        path = Circle(radius=1.5, color=YELLOW).move_to(plane.n2p(0))
+        self.play(Create(path))
+
+        # Function f(z) = 1/z
+        formula = MathTex(r"f(z) = \frac{1}{z}")
+        formula.next_to(title, DOWN)
+        self.play(Write(formula))
+
+        # Moving dot along path
+        mover = Dot(color=BLUE).move_to(path.point_from_proportion(0))
+        self.add(mover)
+
+        def update_mover(mob, alpha):
+            point = path.point_from_proportion(alpha)
+            mob.move_to(point)
+
+        self.play(UpdateFromAlphaFunc(mover, update_mover), run_time=4, rate_func=linear)
+
+        # State theorem result
+        result = MathTex(r"\oint_\gamma \frac{1}{z}\, dz = 0", color=GREEN)
+        result.next_to(formula, DOWN)
+        self.play(Write(result))
+
+        self.wait(2)
