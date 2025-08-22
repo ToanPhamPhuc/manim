@@ -1,0 +1,6 @@
+# This file is used internally by FFMPEG.
+file 'file:C:/dev/vs/Physics/VisualizeTheUniverse/manim/project/media/videos/complex_analysis/480p15/partial_movie_files/GeneralIntegralFormulaScene/1185818338_1788615257_743496366.mp4'
+file 'file:C:/dev/vs/Physics/VisualizeTheUniverse/manim/project/media/videos/complex_analysis/480p15/partial_movie_files/GeneralIntegralFormulaScene/624642324_2283936140_685916412.mp4'
+file 'file:C:/dev/vs/Physics/VisualizeTheUniverse/manim/project/media/videos/complex_analysis/480p15/partial_movie_files/GeneralIntegralFormulaScene/624642324_4029859187_2184684213.mp4'
+file 'file:C:/dev/vs/Physics/VisualizeTheUniverse/manim/project/media/videos/complex_analysis/480p15/partial_movie_files/GeneralIntegralFormulaScene/624642324_3933331617_3174025660.mp4'
+file 'file:C:/dev/vs/Physics/VisualizeTheUniverse/manim/project/media/videos/complex_analysis/480p15/partial_movie_files/GeneralIntegralFormulaScene/624642324_1839128356_1197567120.mp4'

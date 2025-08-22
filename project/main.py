@@ -1,4 +1,3 @@
-from manimlib import *
 from manim import *
 
 # #region: Example Scenes

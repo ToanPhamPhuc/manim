@@ -1,0 +1,10 @@
+# This file is used internally by FFMPEG.
+file 'file:C:/dev/vs/Physics/VisualizeTheUniverse/manim/project/media/videos/complex_analysis/480p15/partial_movie_files/CauchyIntegralFormulaScene/1185818338_1359846955_743496366.mp4'
+file 'file:C:/dev/vs/Physics/VisualizeTheUniverse/manim/project/media/videos/complex_analysis/480p15/partial_movie_files/CauchyIntegralFormulaScene/624642324_464233000_1924198687.mp4'
+file 'file:C:/dev/vs/Physics/VisualizeTheUniverse/manim/project/media/videos/complex_analysis/480p15/partial_movie_files/CauchyIntegralFormulaScene/624642324_486598587_3033153371.mp4'
+file 'file:C:/dev/vs/Physics/VisualizeTheUniverse/manim/project/media/videos/complex_analysis/480p15/partial_movie_files/CauchyIntegralFormulaScene/624642324_1543961203_3316960880.mp4'
+file 'file:C:/dev/vs/Physics/VisualizeTheUniverse/manim/project/media/videos/complex_analysis/480p15/partial_movie_files/CauchyIntegralFormulaScene/624642324_2514916478_2519074874.mp4'
+file 'file:C:/dev/vs/Physics/VisualizeTheUniverse/manim/project/media/videos/complex_analysis/480p15/partial_movie_files/CauchyIntegralFormulaScene/624642324_3098086961_2575265596.mp4'
+file 'file:C:/dev/vs/Physics/VisualizeTheUniverse/manim/project/media/videos/complex_analysis/480p15/partial_movie_files/CauchyIntegralFormulaScene/624642324_118434991_3021534870.mp4'
+file 'file:C:/dev/vs/Physics/VisualizeTheUniverse/manim/project/media/videos/complex_analysis/480p15/partial_movie_files/CauchyIntegralFormulaScene/624642324_3730128804_1962362925.mp4'
+file 'file:C:/dev/vs/Physics/VisualizeTheUniverse/manim/project/media/videos/complex_analysis/480p15/partial_movie_files/CauchyIntegralFormulaScene/624642324_1839128356_1354626688.mp4'

@@ -1,0 +1,10 @@
+# This file is used internally by FFMPEG.
+file 'file:C:/dev/vs/Physics/VisualizeTheUniverse/manim/project/media/videos/complex_analysis/480p15/partial_movie_files/BranchCutCatchScene/1185818338_2706758852_743496366.mp4'
+file 'file:C:/dev/vs/Physics/VisualizeTheUniverse/manim/project/media/videos/complex_analysis/480p15/partial_movie_files/BranchCutCatchScene/624642324_2605573355_2343175173.mp4'
+file 'file:C:/dev/vs/Physics/VisualizeTheUniverse/manim/project/media/videos/complex_analysis/480p15/partial_movie_files/BranchCutCatchScene/624642324_1727567101_597361853.mp4'
+file 'file:C:/dev/vs/Physics/VisualizeTheUniverse/manim/project/media/videos/complex_analysis/480p15/partial_movie_files/BranchCutCatchScene/624642324_3201849554_3118627411.mp4'
+file 'file:C:/dev/vs/Physics/VisualizeTheUniverse/manim/project/media/videos/complex_analysis/480p15/partial_movie_files/BranchCutCatchScene/624642324_2673986084_1868452629.mp4'
+file 'file:C:/dev/vs/Physics/VisualizeTheUniverse/manim/project/media/videos/complex_analysis/480p15/partial_movie_files/BranchCutCatchScene/624642324_1325899947_2228924697.mp4'
+file 'file:C:/dev/vs/Physics/VisualizeTheUniverse/manim/project/media/videos/complex_analysis/480p15/partial_movie_files/BranchCutCatchScene/624642324_4167382979_449393766.mp4'
+file 'file:C:/dev/vs/Physics/VisualizeTheUniverse/manim/project/media/videos/complex_analysis/480p15/partial_movie_files/BranchCutCatchScene/624642324_2027161885_611583579.mp4'
+file 'file:C:/dev/vs/Physics/VisualizeTheUniverse/manim/project/media/videos/complex_analysis/480p15/partial_movie_files/BranchCutCatchScene/624642324_1839128356_2039586288.mp4'

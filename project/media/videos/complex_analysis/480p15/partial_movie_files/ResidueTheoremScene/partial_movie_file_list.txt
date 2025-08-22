@@ -1,0 +1,6 @@
+# This file is used internally by FFMPEG.
+file 'file:C:/dev/vs/Physics/VisualizeTheUniverse/manim/project/media/videos/complex_analysis/480p15/partial_movie_files/ResidueTheoremScene/1185818338_1742116815_743496366.mp4'
+file 'file:C:/dev/vs/Physics/VisualizeTheUniverse/manim/project/media/videos/complex_analysis/480p15/partial_movie_files/ResidueTheoremScene/624642324_1295220008_403109400.mp4'
+file 'file:C:/dev/vs/Physics/VisualizeTheUniverse/manim/project/media/videos/complex_analysis/480p15/partial_movie_files/ResidueTheoremScene/624642324_1662197979_592095278.mp4'
+file 'file:C:/dev/vs/Physics/VisualizeTheUniverse/manim/project/media/videos/complex_analysis/480p15/partial_movie_files/ResidueTheoremScene/624642324_1549504339_1440199607.mp4'
+file 'file:C:/dev/vs/Physics/VisualizeTheUniverse/manim/project/media/videos/complex_analysis/480p15/partial_movie_files/ResidueTheoremScene/624642324_1839128356_646330056.mp4'
