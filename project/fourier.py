@@ -18,6 +18,14 @@ though it may not converge perfectly at discontinuities.
 
 from manim import *
 
+"""
+Square Wave function: sgn(sin(2πnt/T)) is an example of periodic function, where sgn(), is the signum function, and it is non-continuous, that:
+sgn(x) =  1 if x>0
+sgn(x) =  0 if x=0
+sgn(x) = -1 if x<0 
+
+Its Fourier Series is: 4/π Sum(n odd->inf) {2πnt/T}
+"""
 class FourierSquareWave(Scene):
     def construct(self):
         # Set up axes
@@ -35,7 +43,7 @@ class FourierSquareWave(Scene):
         
         # Plot the true square wave
         square_graph = axes.plot(square_wave, color=YELLOW, discontinuities=[-3, -2, -1, 0, 1, 2, 3])
-        square_label = Tex("Square Wave", color=YELLOW).next_to(axes, UP).to_edge(LEFT)
+        square_label = Tex("Square Wave", color=YELLOW).next_to(axes, UP+LEFT)
         self.play(Create(square_graph), Write(square_label))
         self.wait(5)
 
@@ -53,4 +61,27 @@ class FourierSquareWave(Scene):
                 return result
             return fourier_approx
         
+        # Animate adding Fourier terms
+        for n in range(1, max_term+1):
+            # Get current Fourier approximation
+            fourier_func = get_fourier_series(n)
+            fourier_graph =  axes.plot(fourier_func, color=RED)
+
+            # Label for current number of terms
+            term_label = Tex(f"Fourier Approx (n={n})", color=RED).next_to(axes, UP+RIGHT)
+
+            # Show the new term
+            self.play(Create(fourier_graph), Write(term_label))
+            self.wait(1)
+
+            # Remove previous term's graph and label if they exist
+            if fourier_terms:
+                self.play(FadeOut(fourier_terms[-1]["graph"]), FadeOut(fourier_terms[-1]["label"]))
+
+            # Store current graph and label
+            fourier_terms.append({"graph": fourier_graph, "label": term_label})
         
+        # Keep the final approximation and square wave
+        self.play(FadeOut(fourier_terms[-1]["label"]))
+        self.wait(2)
+            
