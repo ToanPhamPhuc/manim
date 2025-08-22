@@ -1,0 +1,2 @@
+# This file is used internally by FFMPEG.
+file 'file:C:/dev/vs/Physics/VisualizeTheUniverse/manim/project/media/videos/fourier/480p15/partial_movie_files/FourierSquareWaves/1185818338_357867146_223132457.mp4'
