@@ -13,7 +13,7 @@ def param_circle(center=0+0j, R=2.0, t0=0, t1=TAU, orientation=+1):
         return center + R * np.exp(1j*(t0+(t1-t0)*t)*orientation)
     return gamma
 
-def trapezoid_coutour_integral(f, gamma, N=2000):
+def trapezoid_contour_integral(f, gamma, N=2000):
     """Numerically approximate ∮ f(z) dz along z = gamma(t), t∈[0,1]."""
     ts = np.linspace(0.0, 1.0, N+1)
     zs = np.array([gamma(t) for t in ts], dtype=complex)
@@ -61,55 +61,59 @@ class CauchyIntegralTheoremScene(BasedComplexScene):
         title.to_edge(UP)
         self.play(FadeIn(title))
 
-        #example  f(z) = z^2
+
+        # Example function analytic everywhere: f(z) = z^2
         def f(z):
             return z**2
-        
-        #square contour (piecewise smooth) around origin
-        R=2.0
-        pts = [R+R*1j, -R+R*1j, -R-R*1j, R+R*1j]
+
+
+        # Square contour (piecewise smooth) around origin
+        R = 2.0
+        pts = [R+R*1j, -R+R*1j, -R-R*1j, R-R*1j, R+R*1j]
         poly = VMobject().set_stroke(BLUE, 3)
-        poly.set_points_as_corners([plane.n2p([p.real, p.imag]) for p in pts])        
+        poly.set_points_as_corners([plane.n2p([p.real, p.imag]) for p in pts])
         self.play(Create(poly))
 
-        #animate a dot going around
-        mover = Dot(color = BLUE).move_to(plane.n2p([pts[0].real, pts[0].imag]))
+
+        # Animate a dot going around
+        mover = Dot(color=BLUE).move_to(plane.n2p([pts[0].real, pts[0].imag]))
         self.add(mover)
         self.play(MoveAlongPath(mover, poly), run_time=3, rate_func=linear)
 
-        #numerical integral ~ 0
+
+        # Numerical integral ~ 0
         gamma_segments = [
             lambda t: R + R*1j + t*(-2*R), # top: (R+iR) -> (-R+iR)
             lambda t: -R + R*1j + t*(-2j*R), # left: (-R+iR) -> (-R-iR)
             lambda t: -R - R*1j + t*(2*R), # bottom: (-R-iR) -> (R-iR)
             lambda t: R - R*1j + t*(2j*R), # right: (R-iR) -> (R+iR)
         ]
-
         def gamma(u):
-            #concatenate segments
+            # concatenate segments
             u = np.clip(u, 0, 1)
-            k = int(u*4)
-            if k == 4: k=3
+            k = int(u * 4)
+            if k == 4: k = 3
             t = u*4 - k
             return gamma_segments[k](t)
-        
-        approx = trapezoid_coutour_integral(f, gamma, N=1600)
+
+        approx = trapezoid_contour_integral(f, gamma, N=1600)
         tex = MathTex(r"\oint_\gamma z^2\,dz \approx ", f"{approx.real:.2e}+{approx.imag:.2e}i", r"\approx 0")
         tex.to_edge(DOWN)
         self.play(Write(tex))
         self.wait(0.5)
 
-        #catch 1: not simple-connected / singularity -> CIT doesn't apply
-        catch = Tex(r"Catch: CIT needs analyticity on \\ and *inside* $\gamma$. A pole inside breaks it.")    
+
+        # Catch 1: Not simply-connected / a singularity inside -> CIT doesn't apply
+        catch = Tex(r"Catch: CIT needs analyticity on \\ and *inside* $\gamma$. A pole inside breaks it.")
         catch.next_to(tex, UP)
         self.play(FadeIn(catch))
 
-        #replace f with 1/(z-0.5) (simple pole at z0=0.5)
+
+        # Replace f with 1/(z - 0.5) (simple pole at 0.5)
         def g(z):
-            return 1.0/(z-0.5)
-        approx_g = trapezoid_coutour_integral(g, gamma, N=2000)
-        tex2 = MathTex(r"\oint_\gamma \frac{dz}{z-0.5} = 2\pi i \neq 0\ (analytically)", color=YELLOW)    
+            return 1.0 / (z - 0.5)
+        approx_g = trapezoid_contour_integral(g, gamma, N=2000)
+        tex2 = MathTex(r"\oint_\gamma \frac{dz}{z-0.5} = 2\pi i \neq 0\ (analytically)", color=YELLOW)
         tex2.next_to(catch, UP)
         self.play(Write(tex2))
         self.wait(1)
-        self.embed()
