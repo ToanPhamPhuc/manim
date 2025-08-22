@@ -31,57 +31,56 @@ class FourierSquareWave(Scene):
         # Set up axes
         axes = Axes(
             x_range=[-10, 10, 1],
-            y_range=[-2, 2, 1],
+            y_range=[-2, 2, 0.5],
             axis_config={"color": BLUE},
         )
         axes_labels = axes.get_axis_labels(x_label="t", y_label="f(t)")
         self.play(Create(axes), Write(axes_labels))
-
+        
         # Define square wave function
         def square_wave(t):
-            return 1 if (t%2)<1 else -1
+            return 1 if (t % 2) < 1 else -1
         
         # Plot the true square wave
-        square_graph = axes.plot(square_wave, color=YELLOW, discontinuities=[-3, -2, -1, 0, 1, 2, 3])
-        square_label = Tex("Square Wave", color=YELLOW).next_to(axes, UP+LEFT)
+        square_graph = axes.plot(square_wave, color=YELLOW, discontinuities=[-9, -8, -7, -6, -5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
+        square_label = Tex("Square Wave", color=YELLOW).next_to(axes, UP).to_corner(LEFT)
         self.play(Create(square_graph), Write(square_label))
-        self.wait(5)
-
+        self.wait(1)
+        
         # Fourier series parameters
-        T = 2 # Period of square wave
-        max_term = 7 # Number of sine terms to add
+        T = 2  # Period of square wave
+        max_terms = 50  # Number of sine terms to add
         fourier_terms = []
-
+        
         # Define Fourier series approximation
         def get_fourier_series(n_terms):
             def fourier_approx(t):
                 result = 0
-                for n in range(1, n_terms * 2, 2): #odd harmonic 
-                    result += (4/ PI*n)* np.sin(2*PI*n*t/T)
+                for n in range(1, n_terms * 2, 2):  # Odd harmonics only
+                    result += (4 / (np.pi * n)) * np.sin(2 * np.pi * n * t / T)
                 return result
             return fourier_approx
         
         # Animate adding Fourier terms
-        for n in range(1, max_term+1):
+        for n in range(1, max_terms + 1):
             # Get current Fourier approximation
             fourier_func = get_fourier_series(n)
-            fourier_graph =  axes.plot(fourier_func, color=RED)
-
+            fourier_graph = axes.plot(fourier_func, color=RED)
+            
             # Label for current number of terms
-            term_label = Tex(f"Fourier Approx (n={n})", color=RED).next_to(axes, UP+RIGHT)
-
+            term_label = Tex(f"Fourier Approx (n={n})", color=RED).next_to(axes, UP).to_corner(RIGHT)
+            
             # Show the new term
             self.play(Create(fourier_graph), Write(term_label))
             self.wait(1)
-
+            
             # Remove previous term's graph and label if they exist
             if fourier_terms:
                 self.play(FadeOut(fourier_terms[-1]["graph"]), FadeOut(fourier_terms[-1]["label"]))
-
+            
             # Store current graph and label
             fourier_terms.append({"graph": fourier_graph, "label": term_label})
         
         # Keep the final approximation and square wave
         self.play(FadeOut(fourier_terms[-1]["label"]))
         self.wait(2)
-            
