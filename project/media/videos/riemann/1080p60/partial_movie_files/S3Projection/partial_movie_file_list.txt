@@ -1,0 +1,5 @@
+# This file is used internally by FFMPEG.
+file 'file:C:/dev/vs/Physics/VisualizeTheUniverse/manim/project/media/videos/riemann/1080p60/partial_movie_files/S3Projection/2544536139_2941291501_3796498664.mp4'
+file 'file:C:/dev/vs/Physics/VisualizeTheUniverse/manim/project/media/videos/riemann/1080p60/partial_movie_files/S3Projection/3395690346_1508533063_167374515.mp4'
+file 'file:C:/dev/vs/Physics/VisualizeTheUniverse/manim/project/media/videos/riemann/1080p60/partial_movie_files/S3Projection/3044991227_3543312089_212212578.mp4'
+file 'file:C:/dev/vs/Physics/VisualizeTheUniverse/manim/project/media/videos/riemann/1080p60/partial_movie_files/S3Projection/2697338295_3856677537_3540149651.mp4'
