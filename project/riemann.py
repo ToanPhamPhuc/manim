@@ -125,6 +125,39 @@ class S3Projection(ThreeDScene):
         # Fade out
         self.play(*[FadeOut(surf) for surf in surfaces], FadeOut(geodesic), FadeOut(axes), run_time=1)
 
+class KleinBottle(ThreeDScene):
+    def construct(self):
+        # Set up 3D axes
+        axes = ThreeDAxes()
+
+        # Define Klein bottle parametric equations
+        def klein_bottle(u, v):
+            # u, v ∈ [0, 2π]
+            u = u * 2 * PI
+            v = v * 2 * PI
+            x = (2 + np.cos(u / 2) * np.sin(v) - np.sin(u / 2) * np.sin(2 * v)) * np.cos(u)
+            y = (2 + np.cos(u / 2) * np.sin(v) - np.sin(u / 2) * np.sin(2 * v)) * np.sin(u)
+            z = np.sin(u / 2) * np.sin(v) + np.cos(u / 2) * np.sin(2 * v)
+            return np.array([x, y, z])
+
+        # Create parametric surface
+        surface = Surface(
+            lambda u, v: klein_bottle(u, v),
+            u_range=[0, 1],
+            v_range=[0, 1],
+            resolution=(100, 100),
+            fill_opacity=0.8,
+            checkerboard_colors=[BLUE_D, BLUE_E]
+        )
+
+        # Add to scene
+        self.set_camera_orientation(phi=75 * DEGREES, theta=30 * DEGREES)
+        self.add(axes)
+        self.play(Create(surface))
+        self.wait(2)
+        self.begin_ambient_camera_rotation(rate=0.2)
+        self.wait(8)
+
 if __name__ == "__main__":
     config.quality = "high_quality"
     scene = SphereManifold()

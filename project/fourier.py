@@ -84,3 +84,119 @@ class FourierSquareWave(Scene):
         # Keep the final approximation and square wave
         self.play(FadeOut(fourier_terms[-1]["label"]))
         self.wait(2)
+
+"""
+Wave Function
+"""
+class FourierClassicalWave(Scene):
+    def construct(self):
+        # Set up axes
+        axes = Axes(
+            x_range=[-6, 6, 1],
+            y_range=[-2, 2, 0.5],
+            axis_config={"color": BLUE}
+        )
+        axes_labels = axes.get_axis_labels(x_label="x", y_label="y(x,t)")
+        self.play(Create(axes), Write(axes_labels))
+
+        # Wave parameters
+        lambda_1 = 4 
+        lambda_2 = 2
+        omega_1 = 2*np.pi/2
+        omega_2 = 2*np.pi/1
+        A1, A2 = 1, 0.5
+
+        # Define the classical wave function
+        def wave_function(x, t):
+            return A1*np.sin(2*np.pi*x/lambda_1 - omega_1*t) + A2*np.sin(2*np.pi*x/lambda_2 - omega_2*t)
+        
+        # Animate the traveling wave
+        t = ValueTracker(0)
+        wave_graph = always_redraw(
+            lambda: axes.plot(lambda x: wave_function(x, t.get_value()), color=YELLOW)
+        )
+        wave_label = Tex("Classical Wave", color=YELLOW).next_to(axes, UP).to_edge(LEFT)
+        self.play(Create(wave_graph), Write(wave_label))
+        self.play(t.animate.set_value(2), run_time=4, rate_func=linear)
+        self.wait(1)
+
+        self.play(FadeOut(wave_graph), FadeOut(wave_label))
+
+        # Show individual Fourier components
+        def first_component(x, t):
+            return A1*np.sin(2*np.pi*x/lambda_1 - omega_1*t)
+        
+        def second_component(x, t):
+            return A2*np.sin(2*np.pi*x/lambda_2 - omega_1*t)
+        
+        # Plot first component
+        t.set_value(0) #reset time
+        component_1 = always_redraw(
+            lambda: axes.plot(lambda x: first_component(x, t.get_value()), color=RED)
+        )
+        label_1 = Tex("First Component", color=RED).to_corner(UP+RIGHT)
+        self.play(Create(component_1), Write(label_1))
+        self.play(t.animate.set_value(2), run_time=4, rate_func=linear)
+        self.wait(1)
+
+        # Plot first component
+        t.set_value(0) #reset time
+        component_2 = always_redraw(
+            lambda: axes.plot(lambda x: second_component(x, t.get_value()), color=GREEN)
+        )
+        self.play(FadeOut(label_1))
+        label_2 = Tex("Second Component", color=GREEN).to_corner(UP+RIGHT)
+        self.play(Create(component_2), Write(label_2))
+        self.play(t.animate.set_value(2), run_time=4, rate_func=linear)
+        self.wait(1)
+
+        # Show how components sum to the original wave
+        self.play(FadeOut(label_2))
+        self.play(FadeOut(component_1), FadeOut(component_2))
+        self.play(Create(wave_graph), Create(wave_label))
+        self.play(t.animate.set_value(4), run_time=8, rate_func=linear)
+        self.wait(5)
+        
+"""
+The Classical Wave Equation, is a second-order linear PDE for the description of waves or standing wave fields such as mechanical waves or electromagnetic waves.
+It arises in fields like acoustics, electromagnetism, and fluid dynamics.
+d^u/dt^2=c^2(d^2u/dx^2+d^2u/dy^2+d^2u/dz^2)
+Where: u(x,y,z,t) is the wave amplitude, c is the wave speed, and the right hand sigh represents the Laplacian (∇^2u) in 3D space.
+Our goal is to apply a Fourier transform to this equation, which is  a common technique to solve linear PDEs by decomposing the solution into frequency components
+"""
+
+class WaveEquationVisualization(ThreeDScene):
+    def construct(self):
+        # Set up 2D axes (x, y)
+        axes = ThreeDAxes(
+            x_range=[-6, 6, 1],
+            y_range=[-6, 6, 1],
+            z_range=[-2, 2, 0.5],  # For height of the wave
+            axis_config={"color": BLUE},
+        )
+        axes_labels = axes.get_axis_labels(x_label="x", y_label="y")
+        self.play(Create(axes), Write(axes_labels))
+
+        # Wave parameters
+        c = 1.0
+        k_x, k_y = 1.0, 1.0  # Wave numbers
+        omega = c * np.sqrt(k_x**2 + k_y**2)
+        t = ValueTracker(0)
+
+        # Define 2D wave function (z=0 plane for simplicity)
+        def wave_function(x, y):
+            return np.sin(k_x * x + k_y * y - omega * t.get_value())
+
+        # Create surface plot
+        wave_surface = always_redraw(
+            lambda: Surface(
+                lambda x, y: wave_function(x, y),
+                resolution=(20, 20),
+                u_range=[-6, 6],
+                v_range=[-6, 6],
+                color=YELLOW,
+            )
+        )
+        self.play(Create(wave_surface))
+        self.play(t.animate.set_value(4), run_time=4, rate_func=linear)
+        self.wait(1)
