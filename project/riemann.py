@@ -125,40 +125,120 @@ class S3Projection(ThreeDScene):
         # Fade out
         self.play(*[FadeOut(surf) for surf in surfaces], FadeOut(geodesic), FadeOut(axes), run_time=1)
 
-class KleinBottle(ThreeDScene):
+class KleinConstruction(ThreeDScene):
     def construct(self):
-        # Set up 3D axes
+        # camera + axes
+        self.set_camera_orientation(phi=65 * DEGREES, theta=-40 * DEGREES, zoom=0.9)
         axes = ThreeDAxes()
+        self.add(axes)
 
-        # Define Klein bottle parametric equations
-        def klein_bottle(u, v):
-            # u, v ∈ [0, 2π]
-            u = u * 2 * PI
-            v = v * 2 * PI
-            x = (2 + np.cos(u / 2) * np.sin(v) - np.sin(u / 2) * np.sin(2 * v)) * np.cos(u)
-            y = (2 + np.cos(u / 2) * np.sin(v) - np.sin(u / 2) * np.sin(2 * v)) * np.sin(u)
-            z = np.sin(u / 2) * np.sin(v) + np.cos(u / 2) * np.sin(2 * v)
-            return np.array([x, y, z])
+        # ---------- Step 1: square with arrows ----------
+        step1_title = Text("1) Start with a square — identify opposite edges",
+                           font_size=34).to_edge(UP)
+        self.add_fixed_in_frame_mobjects(step1_title)
 
-        # Create parametric surface
-        surface = Surface(
-            lambda u, v: klein_bottle(u, v),
-            u_range=[0, 1],
-            v_range=[0, 1],
-            resolution=(100, 100),
-            fill_opacity=0.8,
-            checkerboard_colors=[BLUE_D, BLUE_E]
+        s = 4
+        square = Square(side_length=s).set_stroke(WHITE, 2)
+
+        # arrows (red = left/right edges, blue = top/bottom edges)
+        left_arrow   = Arrow(square.get_corner(UL), square.get_corner(DL),
+                             buff=0, color=RED, stroke_width=6)
+        right_arrow  = Arrow(square.get_corner(UR), square.get_corner(DR),
+                             buff=0, color=RED, stroke_width=6)
+        top_arrow    = Arrow(square.get_corner(UR), square.get_corner(UL),
+                             buff=0, color=BLUE, stroke_width=6)
+        bottom_arrow = Arrow(square.get_corner(DL), square.get_corner(DR),
+                             buff=0, color=BLUE, stroke_width=6)
+        arrows2d = VGroup(left_arrow, right_arrow, top_arrow, bottom_arrow)
+
+        self.play(Create(square), LaggedStartMap(Create, arrows2d, lag_ratio=0.15),
+                  Write(step1_title))
+        self.wait(1)
+
+        # ---------- Step 2: glue left/right → cylinder ----------
+        step2_title = Text("2) Glue left & right edges → a cylinder",
+                           font_size=34).to_edge(UP)
+        self.add_fixed_in_frame_mobjects(step2_title)
+
+        cyl = self.make_cylinder(radius=1.5, height=4.0)
+        cyl_marks = self.cylinder_rim_arrows(radius=1.5, height=4.0)
+
+        self.play(FadeTransform(VGroup(square, arrows2d), VGroup(cyl, cyl_marks)),
+                  Transform(step1_title, step2_title))
+        self.wait(1)
+
+        # ---------- Step 3: pass one end through the side ----------
+        step3_title = Text("3) Pass one end through the side, then glue the ends",
+                           font_size=34).to_edge(UP)
+        self.add_fixed_in_frame_mobjects(step3_title)
+
+        # a copy of the cylinder to illustrate the motion
+        mover = VGroup(cyl.copy(), cyl_marks.copy())
+        self.add(mover)
+
+        self.play(Transform(step1_title, step3_title))
+        # tilt and swing the copy to "thread" it through
+        self.play(mover.animate.rotate(PI/2, axis=RIGHT).shift(LEFT * 2.8))
+        self.play(mover.animate.shift(RIGHT * 2.8))
+        self.wait(1)
+
+        # ---------- Step 4: Klein bottle (figure-8 immersion) ----------
+        step4_title = Text("4) Resulting surface: Klein bottle (figure-8 immersion)",
+                           font_size=34).to_edge(UP)
+        self.add_fixed_in_frame_mobjects(step4_title)
+
+        klein = self.klein_figure8_surface(r=2.2).set_opacity(0.9)
+        self.play(Transform(step1_title, step4_title))
+        self.play(ReplacementTransform(VGroup(cyl, cyl_marks, mover), klein))
+        self.begin_ambient_camera_rotation(rate=0.2)
+        self.wait(4)
+
+    # ---------- helpers ----------
+
+    def make_cylinder(self, radius=1.5, height=4.0):
+        """Closed cylinder surface (for visuals)."""
+        return Surface(
+            lambda u, v: np.array([
+                radius * np.cos(TAU * u),
+                radius * np.sin(TAU * u),
+                (v - 0.5) * height
+            ]),
+            u_range=[0, 1], v_range=[0, 1], resolution=(64, 20),
+            checkerboard_colors=[BLUE_D, BLUE_E],
+            stroke_color=BLACK, stroke_width=0.5, fill_opacity=0.85
         )
 
-        # Add to scene
-        self.set_camera_orientation(phi=75 * DEGREES, theta=30 * DEGREES)
-        self.add(axes)
-        self.play(Create(surface))
-        self.wait(2)
-        self.begin_ambient_camera_rotation(rate=0.2)
-        self.wait(8)
+    def cylinder_rim_arrows(self, radius=1.5, height=4.0):
+        """Rim circles + tangent arrows indicating how ends should be glued."""
+        def rim(z, color, direction=+1):
+            circ = Circle(radius=radius, color=color, stroke_width=4).shift(OUT * (z))
+            # tangent arrow on the rim (tangent at angle 0)
+            p = np.array([radius, 0, z])
+            t = np.array([0, 1, 0]) * direction  # tangent direction
+            arr = Arrow(p - 0.7 * t, p + 0.7 * t, buff=0, stroke_width=6, color=color)
+            return VGroup(circ, arr)
 
-if __name__ == "__main__":
-    config.quality = "high_quality"
-    scene = SphereManifold()
-    scene.render()
+        top = rim(+height/2, BLUE, direction=+1)
+        bot = rim(-height/2, BLUE, direction=+1)  # same orientation to “match” when glued
+        seam = DashedLine(
+            np.array([radius, 0, -height/2]),
+            np.array([radius, 0, +height/2]),
+            color=RED, dash_length=0.15
+        )
+        return VGroup(top, bot, seam)
+
+    def klein_figure8_surface(self, r=2.2):
+        """Figure-8 immersion from Wikipedia (theta,v in [0,2π))."""
+        def f(u, v):
+            th = TAU * u
+            w = TAU * v
+            x = (r + np.cos(th/2) * np.sin(w) - np.sin(th/2) * np.sin(2*w)) * np.cos(th)
+            y = (r + np.cos(th/2) * np.sin(w) - np.sin(th/2) * np.sin(2*w)) * np.sin(th)
+            z =  np.sin(th/2) * np.sin(w) + np.cos(th/2) * np.sin(2*w)
+            return np.array([x, y, z])
+
+        return Surface(
+            f, u_range=[0, 1], v_range=[0, 1], resolution=(100, 100),
+            checkerboard_colors=[PURPLE_D, ORANGE],
+            stroke_color=BLACK, stroke_width=0.5, fill_opacity=0.9
+        )
